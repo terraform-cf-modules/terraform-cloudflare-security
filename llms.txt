@@ -1,0 +1,42 @@
+# Terraform Cloudflare Security
+
+> WAF rulesets, rate limiting, bot management, Turnstile, API Shield, and Page Shield.
+
+Terraform module for Cloudflare, maintained by CloudDrove. Source: `terraform-cf-modules/security/cloudflare`. Repository: https://github.com/terraform-cf-modules/terraform-cloudflare-security
+
+Requires Terraform >= 1.12.0 (or OpenTofu >= 1.12) and the `cloudflare/cloudflare` provider ~> 5.24. Provider v5 renamed most resources from v4, so verify resource names against the current provider docs rather than older examples.
+
+## Usage
+
+```hcl
+module "this" {
+  source  = "terraform-cf-modules/security/cloudflare"
+  version = "~> 0.1"
+}
+```
+
+## Submodules
+
+Each is separately addressable with the double slash source syntax.
+
+- [api-shield](https://github.com/terraform-cf-modules/terraform-cloudflare-security/tree/main/modules/api-shield): `terraform-cf-modules/security/cloudflare//modules/api-shield`
+- [bot-management](https://github.com/terraform-cf-modules/terraform-cloudflare-security/tree/main/modules/bot-management): `terraform-cf-modules/security/cloudflare//modules/bot-management`
+- [firewall-legacy](https://github.com/terraform-cf-modules/terraform-cloudflare-security/tree/main/modules/firewall-legacy): `terraform-cf-modules/security/cloudflare//modules/firewall-legacy`
+- [list](https://github.com/terraform-cf-modules/terraform-cloudflare-security/tree/main/modules/list): `terraform-cf-modules/security/cloudflare//modules/list`
+- [page-shield](https://github.com/terraform-cf-modules/terraform-cloudflare-security/tree/main/modules/page-shield): `terraform-cf-modules/security/cloudflare//modules/page-shield`
+- [rate-limit](https://github.com/terraform-cf-modules/terraform-cloudflare-security/tree/main/modules/rate-limit): `terraform-cf-modules/security/cloudflare//modules/rate-limit`
+- [ruleset](https://github.com/terraform-cf-modules/terraform-cloudflare-security/tree/main/modules/ruleset): `terraform-cf-modules/security/cloudflare//modules/ruleset`
+- [turnstile](https://github.com/terraform-cf-modules/terraform-cloudflare-security/tree/main/modules/turnstile): `terraform-cf-modules/security/cloudflare//modules/turnstile`
+
+## Documentation
+
+- [README](https://github.com/terraform-cf-modules/terraform-cloudflare-security/blob/main/README.md): overview and usage
+- [Inputs and outputs](https://github.com/terraform-cf-modules/terraform-cloudflare-security/blob/main/docs/io.md): every variable and output
+- [Examples](https://github.com/terraform-cf-modules/terraform-cloudflare-security/tree/main/examples): runnable configurations
+- [Architecture](https://github.com/terraform-cf-modules/terraform-cloudflare-security/blob/main/docs/architecture.md): resource map and provider quirks
+
+## Related
+
+- [All CloudDrove modules](https://github.com/clouddrove/toc): every module and submodule across AWS, Azure, Google Cloud, DigitalOcean, Hetzner Cloud and Cloudflare
+- [Organisation](https://github.com/terraform-cf-modules): the Cloudflare module family
+- [Terraform Registry](https://registry.terraform.io/namespaces/terraform-cf-modules)
