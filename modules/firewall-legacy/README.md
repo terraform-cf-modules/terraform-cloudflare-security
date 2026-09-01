@@ -94,29 +94,6 @@ module "legacy" {
   just the value.
 
 <!-- BEGIN_TF_DOCS -->
-## Requirements
-
-| Name | Version |
-| ---- | ------- |
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.12.0 |
-| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | ~> 5.24 |
-
-## Providers
-
-| Name | Version |
-| ---- | ------- |
-| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | ~> 5.24 |
-
-## Resources
-
-| Name | Type |
-| ---- | ---- |
-| [cloudflare_access_rule.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/access_rule) | resource |
-| [cloudflare_filter.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/filter) | resource |
-| [cloudflare_firewall_rule.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/firewall_rule) | resource |
-| [cloudflare_user_agent_blocking_rule.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/user_agent_blocking_rule) | resource |
-| [cloudflare_zone_lockdown.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/zone_lockdown) | resource |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

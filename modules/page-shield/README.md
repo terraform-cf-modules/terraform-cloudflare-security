@@ -52,27 +52,6 @@ module "page_shield" {
 - Page Shield policies need a Business plan or above; content scanning is Enterprise.
 
 <!-- BEGIN_TF_DOCS -->
-## Requirements
-
-| Name | Version |
-| ---- | ------- |
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.12.0 |
-| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | ~> 5.24 |
-
-## Providers
-
-| Name | Version |
-| ---- | ------- |
-| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | ~> 5.24 |
-
-## Resources
-
-| Name | Type |
-| ---- | ---- |
-| [cloudflare_content_scanning.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/content_scanning) | resource |
-| [cloudflare_content_scanning_expression.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/content_scanning_expression) | resource |
-| [cloudflare_page_shield_policy.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/page_shield_policy) | resource |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

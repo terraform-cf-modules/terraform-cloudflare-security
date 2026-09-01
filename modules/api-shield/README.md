@@ -84,31 +84,6 @@ module "api_shield" {
 - API Shield is an Enterprise add-on. On a plan without it the API rejects these calls.
 
 <!-- BEGIN_TF_DOCS -->
-## Requirements
-
-| Name | Version |
-| ---- | ------- |
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.12.0 |
-| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | ~> 5.24 |
-
-## Providers
-
-| Name | Version |
-| ---- | ------- |
-| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | ~> 5.24 |
-
-## Resources
-
-| Name | Type |
-| ---- | ---- |
-| [cloudflare_api_shield.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/api_shield) | resource |
-| [cloudflare_api_shield_operation.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/api_shield_operation) | resource |
-| [cloudflare_api_shield_operation_schema_validation_settings.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/api_shield_operation_schema_validation_settings) | resource |
-| [cloudflare_api_shield_schema.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/api_shield_schema) | resource |
-| [cloudflare_schema_validation_operation_settings.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/schema_validation_operation_settings) | resource |
-| [cloudflare_schema_validation_schemas.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/schema_validation_schemas) | resource |
-| [cloudflare_schema_validation_settings.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/schema_validation_settings) | resource |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
