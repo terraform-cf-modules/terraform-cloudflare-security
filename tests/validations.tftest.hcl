@@ -4,7 +4,6 @@
 # Submodule validations are reached with a `module` block inside the run.
 
 mock_provider "cloudflare" {
-  override_during = plan
 }
 
 variables {
