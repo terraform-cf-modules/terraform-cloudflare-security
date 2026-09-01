@@ -1,0 +1,194 @@
+---
+#
+# This is the canonical configuration for `README.md`.
+# Run `make docs` for the terraform-docs block, the readme workflow rebuilds the rest.
+#
+
+name: Terraform Cloudflare Security
+
+intro: |-
+  With our comprehensive DevOps toolkit, streamline operations, automate workflows, enhance collaboration and deploy with confidence.
+
+badges_text: "Latest Release | License | Changelog"
+
+about: |-
+  WAF rulesets, rate limiting, bot management, Turnstile, API Shield, and Page Shield.
+
+license: "APACHE"
+
+github_repo: terraform-cf-modules/terraform-cloudflare-security
+
+badges:
+  - name: "Terraform"
+    image: "https://img.shields.io/badge/Terraform-v1.10.0-green"
+    url: "https://www.terraform.io"
+
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
+    url: "LICENSE"
+
+  - name: "Changelog"
+    image: "https://img.shields.io/badge/Changelog-blue"
+    url: "CHANGELOG.md"
+
+prerequisites:
+  - name: Terraform
+    url: https://learn.hashicorp.com/terraform/getting-started/install.html
+    version: ">= 1.10.0"
+
+  - name: OpenTofu
+    url: https://opentofu.org/docs/intro/install/
+    version: ">= 1.9.0"
+
+providers:
+  - name: cloudflare
+    url: https://registry.terraform.io/providers/cloudflare/cloudflare/latest
+    version: "~> 5.24"
+
+description: |-
+  The Cloudflare security surface as one Terraform module: WAF rulesets, rate limiting, lists, bot management,
+  the legacy firewall, Turnstile, API Shield and Page Shield.
+
+  The root module applies a WAF baseline to a zone. Given a zone ID and nothing else it deploys the Cloudflare
+  Managed Ruleset and the OWASP Core Ruleset into the `http_request_firewall_managed` phase. Add rules and it
+  builds `http_request_firewall_custom` and `http_ratelimit` phases alongside, with evaluation order taken from
+  an explicit priority rather than from map iteration order.
+
+  `cloudflare_ruleset` is the most complex resource in the provider: one flat `action_parameters` object with
+  roughly ninety optional attributes whose legality depends on the rule action and the ruleset phase.
+  `modules/ruleset` types the subset used by the security, transform, redirect, config and logging phases, and
+  `docs/architecture.md` lists exactly which shapes are supported and which are not.
+
+  Two submodules exist for migration rather than for new work. Cloudflare has deprecated the rate limiting,
+  filters and firewall rules APIs in favour of the Ruleset Engine, so `modules/rate-limit` and
+  `modules/firewall-legacy` are there to adopt an existing estate and move it, not to start from.
+
+  Every module targets Cloudflare provider v5. Cloudflare rewrote the provider from its OpenAPI spec in v5.0.0
+  and renamed most resources, so verify resource names and attributes against the current provider
+  documentation rather than from memory or from older examples.
+
+usage: |-
+  ### The baseline
+
+  ```hcl
+  module "security" {
+    source  = "terraform-cf-modules/security/cloudflare"
+    version = "~> 0.1"
+
+    zone_id = var.zone_id
+  }
+  ```
+
+  ### The baseline plus zone specific rules
+
+  ```hcl
+  module "security" {
+    source  = "terraform-cf-modules/security/cloudflare"
+    version = "~> 0.1"
+
+    zone_id     = var.zone_id
+    name_prefix = "platform"
+
+    custom_rules = {
+      allow_office = {
+        priority   = 10
+        expression = "(ip.src in $office_ips)"
+        action     = "skip"
+        action_parameters = {
+          ruleset = "current"
+        }
+      }
+
+      block_admin_from_outside = {
+        priority   = 100
+        expression = "(starts_with(http.request.uri.path, \"/admin\") and not ip.src in $office_ips)"
+        action     = "block"
+      }
+    }
+
+    rate_limit_rules = {
+      login = {
+        priority            = 10
+        expression          = "(http.request.uri.path eq \"/login\" and http.request.method eq \"POST\")"
+        period              = 60
+        requests_per_period = 20
+        mitigation_timeout  = 600
+      }
+    }
+
+    bot_management = {
+      enable_js          = true
+      ai_bots_protection = "block"
+    }
+  }
+  ```
+
+  ### A single building block
+
+  ```hcl
+  module "response_headers" {
+    source  = "terraform-cf-modules/security/cloudflare//modules/ruleset"
+    version = "~> 0.1"
+
+    zone_id = var.zone_id
+    name    = "Security headers"
+    kind    = "zone"
+    phase   = "http_response_headers_transform"
+
+    rules = {
+      harden = {
+        expression = "true"
+        action     = "rewrite"
+        action_parameters = {
+          headers = {
+            "Strict-Transport-Security" = { operation = "set", value = "max-age=31536000; includeSubDomains" }
+            "X-Content-Type-Options"    = { operation = "set", value = "nosniff" }
+            "Server"                    = { operation = "remove" }
+          }
+        }
+      }
+    }
+  }
+  ```
+
+  ### Many zones at once
+
+  ```hcl
+  module "zones" {
+    source = "terraform-cf-modules/security/cloudflare//wrappers"
+
+    defaults = {
+      name_prefix = "platform"
+    }
+
+    items = {
+      example_com = { zone_id = var.example_com_zone_id }
+      example_org = { zone_id = var.example_org_zone_id, managed_rulesets_enabled = false }
+    }
+  }
+  ```
+
+  ### Submodules
+
+  | Module | Resources |
+  |--------|-----------|
+  | `modules/ruleset` | `cloudflare_ruleset` in any phase |
+  | `modules/rate-limit` | `cloudflare_rate_limit` (deprecated by Cloudflare) |
+  | `modules/list` | `cloudflare_list`, `cloudflare_list_item` |
+  | `modules/bot-management` | `cloudflare_bot_management` |
+  | `modules/firewall-legacy` | `cloudflare_filter`, `cloudflare_firewall_rule`, `cloudflare_access_rule`, `cloudflare_user_agent_blocking_rule`, `cloudflare_zone_lockdown` |
+  | `modules/turnstile` | `cloudflare_turnstile_widget` |
+  | `modules/api-shield` | `cloudflare_api_shield`, `cloudflare_api_shield_operation`, the schema and schema validation resources |
+  | `modules/page-shield` | `cloudflare_page_shield_policy`, `cloudflare_content_scanning`, `cloudflare_content_scanning_expression` |
+
+  ### Things worth knowing before you apply
+
+  - A zone has exactly one entry point ruleset per phase. Two module instances targeting the same zone and
+    phase fight over one object, and an empty entry point ruleset takes ownership of the phase and clears it.
+  - Rule order comes from `priority`, then from the map key, never from map order.
+  - A rule expression referencing a list creates no Terraform dependency, because `ip.src in $office_ips` is a
+    string. Create lists first with `modules/list`, which is account scoped.
+  - Bot management and content scanning are zone settings rather than objects. Destroying them stops Terraform
+    managing the setting rather than turning the feature off.
+  - The managed ruleset IDs in `var.managed_rulesets` come from Cloudflare's documentation, not from the
+    provider schema. Confirm them with `GET /zones/{zone_id}/rulesets`.
